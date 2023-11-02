@@ -1,0 +1,27 @@
+:root {
+  --primary-color: #1a1a1a;
+  --secondary-color: #00FF00;
+  --tertiary-color: #FFFFFF ;
+  --hover-color: ;
+
+  --primary-font: 'Indie Flower', cursive;
+  --secondary-font:  'Ubuntu', sans-serif;
+}
+
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
+  background-color: var(--primary-color);
+  }
+  *, *:before, *:after {
+  box-sizing:inherit;
+}
+
+h1, h2, h3 {
+  font-family: var(--primary-font);
+  font-size: 10rem;
+}
+
+
+
+
