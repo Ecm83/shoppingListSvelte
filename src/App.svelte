@@ -3,7 +3,7 @@
   import Perfil from "./views/Edit.svelte";
   import Home from "./views/Home.svelte";
   import Login from "./views/Login.svelte";
-  import NavBar from "./components/NavBar.svelte";
+  import NavBar from "./components/navBar/NavBar.svelte";
   import Lists from "./views/Lists.svelte";
   import Register from "./views/Register.svelte";
 
@@ -41,8 +41,7 @@
 // })();
 </script>
 
-<div>
-  <h1>Hi router! in App</h1>
+
 
   <Router>
 
@@ -70,13 +69,3 @@
     </Route>
 
   </Router>
-
-
-
-</div>
-
-<style>
-  h1 {
-    color: #3f88cd;
-  }
-</style>

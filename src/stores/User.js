@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { writable } from "svelte/store";
 
 const createUser = () => {
@@ -5,7 +6,7 @@ const createUser = () => {
   
   return {
     subscribe,
-    setUser: (/** @type {any} */ user) => {
+    setUser: (user) => {
       set(user)
     }
   }

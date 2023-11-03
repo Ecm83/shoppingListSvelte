@@ -1,7 +1,6 @@
 <script>
 
-  import Input from '../components/blueprints/Input.svelte';
-import {user} from '../stores/User'
+  import {user} from '../stores/User'
   import {navigate} from 'svelte-routing'
 
   let email = ''
@@ -22,9 +21,9 @@ import {user} from '../stores/User'
 <div>
   <h1>Login</h1>
   <form on:submit|preventDefault={processForm}>
-    <!-- <input type="text" placeholder="Email" bind:value={email}> -->
+    <input type="text" placeholder="Email" bind:value={email}>
     <input type="text" placeholder="Your password" bind:value={password}>
     <button type="submit">Login</button>
-    <Input lblName={'Prueba'} type={'email'} placeholder={'dkjfslksd'} bind:value={email} />
+    
   </form>
 </div>

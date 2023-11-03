@@ -1,0 +1,19 @@
+label {
+  font-family: var(--secondary-font);
+  font-size: 2rem;
+}
+
+input {
+  background-color: transparent;
+  font-size: 2rem;
+  margin-left: 1rem;
+  padding: .5rem;
+  font-family: var(--secondary-font);
+  border: .1rem solid var(--black);
+  border-radius: 1rem;
+}
+
+input:focus {
+  outline: none;
+  border: .3rem solid var(--primary-color);
+}

@@ -1,0 +1,30 @@
+.svelte-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-family: var(--primary-font);
+  font-size: 1.5rem;
+  border: .1rem solid var(--primary-color);
+  border-radius: 2rem;
+  padding: 1rem;
+  width: 10rem;
+  text-align: center;
+  transition: .5s;
+}
+
+.private-routes {
+  display: flex;
+  justify-content: space-around;
+}
+
+.public-routes {
+  display: flex;
+  justify-content: space-around;
+}
+
+
+.svelte-link:hover {
+  scale: 1.3;
+  background-color: var(--primary-color);
+  color: var(--white);
+    transition: .5s;
+}
