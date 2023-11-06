@@ -10,6 +10,6 @@
   }
 </script>
 
-<label>Introdueix el teu password: 
+<label>Introdueix el teu password
   <input type="password" placeholder='Contrasenya' bind:value={value} on:input={handleChange} class=input/>
-</label>
+</label> 

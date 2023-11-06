@@ -1,8 +1,10 @@
 :root {
   --primary-color: #F7AD19;
   --secondary-color: #38a138;
+
   --white: #FFFFFF;
   --black: #1a1a1a;
+  --error: #FF2400;
   
   --primary-font: 'Roboto', sans-serif;
   --secondary-font: 'Ubuntu', sans-serif;

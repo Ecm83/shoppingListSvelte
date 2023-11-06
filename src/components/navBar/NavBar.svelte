@@ -9,6 +9,8 @@
   }
 </script>
 
+
+<h1>La meva llista de la compra</h1>
 <nav>
   {#if $user}
   <div class="private-routes">
@@ -24,4 +26,29 @@
   </div>
 {/if}
 </nav>
+<hr>
 
+
+<style scoped>
+  h1 {
+    font-family: var(--primary-font);
+    text-align: center;
+    padding: 2rem 0;
+    font-size: 3rem;
+    color: var(--primary-color);
+  }
+
+  .private-routes {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .public-routes {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  hr {
+    margin-top: 4rem;
+  }
+</style>
