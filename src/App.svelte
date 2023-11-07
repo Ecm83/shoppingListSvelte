@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
   import { Router, Link, Route} from "svelte-routing"
   import Perfil from "./views/Edit.svelte";
   import Home from "./views/Home.svelte";
@@ -6,6 +8,9 @@
   import NavBar from "./components/navBar/NavBar.svelte";
   import Lists from "./views/Lists.svelte";
   import Register from "./views/Register.svelte";
+  import NotFound from "./views/NotFound.svelte";
+
+
 
 //   import puppeteer from 'puppeteer';
 
@@ -65,6 +70,10 @@
 
     <Route path='/register'>
       <Register />
+    </Route>
+
+    <Route path='*'>
+      <NotFound />
     </Route>
 
   </Router>

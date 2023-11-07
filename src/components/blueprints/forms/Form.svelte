@@ -1,13 +1,10 @@
 <script>
   export let legend;
-  
-  function formSubmit() {
-    
-  }
+  export let handleSubmit;
+
 </script>
 
-
-<form on:submit|preventDefault={formSubmit}>
+<form on:submit|preventDefault={handleSubmit}>
   <fieldset>
     <legend>{legend}</legend>
       <slot />

@@ -42,11 +42,11 @@
   }
 </script>
 
-<Form legend={"Registra't"}>
+<Form legend={"Registra't"} handleSubmit={registerSubmit}>
   <Text lblName={"Introdueix el teu nom"} placeholder={"Nom"} bind:value={nameValue}/>
   <Email bind:value={emailValue}/>
   <Password bind:value={passwordValue}/>
-  <Submit btnName={"Registra't"} handleSubmit={registerSubmit} />
+  <Submit btnName={"Registra't"}  />
 </Form>
 
 {#if error}

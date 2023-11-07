@@ -26,17 +26,18 @@
 
     if (foundUser) {
       user.setUser(foundUser); // Establece el usuario actual
-      navigate('/profile', { replace: true });
+      navigate('/lists', { replace: true });
+      
     } else {
       error = 'Credencials incorrectes'; // Muestra un mensaje de error si no se encuentra el usuario
     }
   }
 </script>
 
-<Form legend={"Accedeix"} >
+<Form legend={"Accedeix"} handleSubmit={processForm}>
   <Email bind:value={emailValue} />
   <Password bind:value={passwordValue} />
-  <SubmitButton btnName={"Accedeix"} handleSubmit={processForm} />
+  <SubmitButton btnName={"Accedeix"}  />
 </Form>
 
 {#if error}

@@ -1,9 +1,9 @@
 <script>
   export let btnName;
-  export let handleSubmit;
+  
 </script>
 
-<button on:click={handleSubmit}>{btnName}</button>
+<button>{btnName}</button>
 
 <style scoped>
   button {
