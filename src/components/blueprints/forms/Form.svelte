@@ -1,18 +1,25 @@
 <script>
   export let legend;
   export let handleSubmit;
-
 </script>
 
-<form on:submit|preventDefault={handleSubmit}>
-  <fieldset>
-    <legend>{legend}</legend>
+<div class="form-container">
+  <form on:submit|preventDefault={handleSubmit}>
+    <fieldset>
+      <legend>{legend}</legend>
       <slot />
-  </fieldset>
-</form>
-
+    </fieldset>
+  </form>
+</div>
 
 <style scoped>
+  .form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 4rem;
+  
+  }
 
   form {
     background: var(--white);
@@ -20,9 +27,7 @@
     border-radius: .8rem;
     box-shadow: 0 .4rem .6rem var(--primary-color);
     padding: 2rem;
-    width: 60%;
-    margin-left: 25rem;
-    margin-top: 5rem;
+    max-width: 100%; /* Establece un ancho máximo */
     background-color: transparent;
   }
 
@@ -45,5 +50,4 @@
     display: inline-block;
     margin-bottom: 3rem;
   }
-
 </style>

@@ -9,7 +9,6 @@
 
   let emailValue = '';
   let passwordValue = '';
-
   let error = null;
 
   function processForm() {

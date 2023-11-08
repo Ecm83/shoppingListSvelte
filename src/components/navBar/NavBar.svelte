@@ -3,7 +3,9 @@
   import { Link, navigate } from "svelte-routing";
   import { user } from '../../stores/User';
   import Logout from '../blueprints/buttons/Logout.svelte';
-  
+  import Hr from '../blueprints/others/Hr.svelte';
+
+
 </script>
 
 
@@ -24,7 +26,7 @@
   {/if}
 </nav>
 
-<hr>
+<Hr />
 
 
 <style scoped>
@@ -46,7 +48,4 @@
     justify-content: space-around;
   }
 
-  hr {
-    margin-top: 4rem;
-  }
 </style>

@@ -2,6 +2,7 @@
 // @ts-nocheck
 
   import { Router, Link, Route} from "svelte-routing"
+
   import Perfil from "./views/Edit.svelte";
   import Home from "./views/Home.svelte";
   import Login from "./views/Login.svelte";
@@ -9,10 +10,8 @@
   import Lists from "./views/Lists.svelte";
   import Register from "./views/Register.svelte";
   import NotFound from "./views/NotFound.svelte";
-
-
-
-//   import puppeteer from 'puppeteer';
+  
+// import puppeteer from 'puppeteer';
 
 // (async () => {
 //   // Launch the browser and open a new blank page
