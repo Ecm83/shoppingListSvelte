@@ -1,7 +1,7 @@
 <script>
   import './navBar.css'
   import { Link, navigate } from "svelte-routing";
-  import { user } from '../../stores/User';
+  import { user } from '../../stores/logedUser';
   import Logout from '../blueprints/buttons/Logout.svelte';
   import Hr from '../blueprints/others/Hr.svelte';
 

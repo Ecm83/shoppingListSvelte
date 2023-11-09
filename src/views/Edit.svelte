@@ -1,5 +1,5 @@
 <script>
-  import { user } from "../stores/User";
+  import { user } from "../stores/logedUser.js";
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
   import Text from "../components/blueprints/inputs/Text.svelte";

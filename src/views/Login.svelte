@@ -1,13 +1,13 @@
 <script>
   //@ts-nocheck
   import SubmitButton from '../components/blueprints/buttons/SubmitButton.svelte';
-  import { user } from '../stores/User';
+  import { user } from '../stores/logedUser.js';
   import { navigate } from 'svelte-routing';
   import Form from '../components/blueprints/forms/Form.svelte';
   import Email from '../components/blueprints/inputs/Email.svelte';
   import Password from '../components/blueprints/inputs/Password.svelte';
 
-  let emailValue = '';
+  let emailValue = ''
   let passwordValue = '';
   let error = null;
 
@@ -20,8 +20,14 @@
     // Recupera la lista de usuarios desde localStorage
     const users = JSON.parse(localStorage.getItem('users'));
 
+    console.log('Users from localStorage:', users);
+
     // Verifica si el usuario y contraseña coinciden con algún usuario almacenado
-    const foundUser = users.find((user) => user.emailValue === emailValue && user.passwordValue === passwordValue);
+    const foundUser = users.find((user) => {
+      return user.email.toLowerCase() === emailValue.toLowerCase() && user.password === passwordValue;
+    });
+
+    console.log('Found User:', foundUser);
 
     if (foundUser) {
       user.setUser(foundUser); // Establece el usuario actual
@@ -31,6 +37,8 @@
       error = 'Credencials incorrectes'; // Muestra un mensaje de error si no se encuentra el usuario
     }
   }
+
+
 </script>
 
 <Form legend={"Accedeix"} handleSubmit={processForm}>

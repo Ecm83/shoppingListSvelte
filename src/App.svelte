@@ -10,6 +10,8 @@
   import Lists from "./views/Lists.svelte";
   import Register from "./views/Register.svelte";
   import NotFound from "./views/NotFound.svelte";
+
+  const path = window.location.href
   
 // import puppeteer from 'puppeteer';
 
@@ -72,7 +74,7 @@
     </Route>
 
     <Route path='*'>
-      <NotFound />
+      <NotFound location={path}/>
     </Route>
 
   </Router>

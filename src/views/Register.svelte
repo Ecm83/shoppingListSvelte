@@ -18,22 +18,22 @@
     error = null; // Restablece el error a nulo antes de la validación
 
     if (!nameValue.trim() || !emailValue.trim() || !passwordValue.trim()) {
-      error = 'Tots els camps són obligatoris';
-      return; 
+      error = 'Tots els camps son obligatoris';
+      return;
     }
 
     // Crea un nuevo objeto 'user' con los valores actuales del formulario
     const newUser = {
-      nameValue,
-      passwordValue,
-      emailValue,
+      name: nameValue,
+      password: passwordValue,
+      email: emailValue,
     };
-
+    console.log(newUser.password);
     // Agrega el nuevo 'user' al array 'users'
     users.push(newUser);
-    console.log(users);
-
-    localStorage.setItem('users', JSON.stringify(users))
+    console.log("newUser:", newUser)
+    // Guarda el array 'users' en localStorage después de convertirlo a una cadena JSON
+    localStorage.setItem('users', JSON.stringify(users));
 
     // Reinicia los valores del formulario
     nameValue = '';

@@ -1,14 +1,21 @@
 <script>
+  import { user } from "../stores/logedUser.js"
   // Recupera los datos del usuario del Local Storage
-  const userLocal = JSON.parse(localStorage.getItem('users'));
   let welcomeMessage = '';
 
-  // Verifica si se encontraron datos del usuario en el Local Storage
-  if (userLocal) {
-    welcomeMessage = `Hola ${userLocal.nameValue}, bienvenido a nuestra aplicación.`;
+  user.subscribe((value) => {
+    if (user) {
+    console.log('user en pagina edit', user);
+    welcomeMessage = `Hola ${value.name}, bienvenido a nuestra aplicación.`;
   } else {
     welcomeMessage = 'Bienvenido a nuestra aplicación. Inicia sesión para obtener una experiencia personalizada.';
   }
+  });
+
+  console.log('user lists page', user);
+  // Verifica si se encontraron datos del usuario en el Local Storage
+
+
 </script>
 
 <p>{welcomeMessage}</p>

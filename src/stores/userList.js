@@ -1,7 +1,7 @@
 //@ts-nocheck
 import { writable } from "svelte/store";
 
-const createUser = () => {
+const userList = () => {
   const { subscribe, set } = writable(null)
   
   return {
@@ -12,4 +12,5 @@ const createUser = () => {
   }
 }
 
-export const user = createUser()
+
+export const list = userList()

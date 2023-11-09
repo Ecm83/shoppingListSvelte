@@ -1,9 +1,9 @@
 <script>
-  import { user } from "../../../stores/User";
+  import { list } from "../../../stores/userList";
   import { navigate } from "svelte-routing";
 
   const logout = () => {
-    user.setUser(null);
+    list.setUser(null);
     navigate('./login', { replace: true });
   }
 </script>
