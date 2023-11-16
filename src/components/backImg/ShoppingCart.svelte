@@ -4,7 +4,7 @@
 
 <style scoped>
   .material-symbols-outlined {
-    font-size: 50rem;
+    font-size: 40rem;
     color: var(--icon);
     font-variation-settings:
       'FILL' 0,

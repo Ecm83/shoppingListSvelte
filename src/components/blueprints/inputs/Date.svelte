@@ -9,6 +9,6 @@
   }
 </script>
 
-<label>Introdueix el teu email: 
+<label>Introdueix el día: 
   <input type="date" bind:value={value} on:input={handleChange} class=input/>
 </label>
