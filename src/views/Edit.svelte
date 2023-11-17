@@ -1,24 +1,22 @@
 <script>
   // @ts-nocheck
   import { onMount, onDestroy } from "svelte";
-  import { navigate } from "svelte-routing";
   import Text from "../components/blueprints/inputs/Text.svelte";
   import Form from "../components/blueprints/forms/Form.svelte";
   import ShoppingCart from "../components/backImg/ShoppingCart.svelte";
   import TopPage from "../components/icons/TopPage.svelte";
+  import { navigate } from 'svelte-routing';
   import 'mapbox-gl/dist/mapbox-gl.css';
 
   import { Map } from "mapbox-gl";
-  // import "../node_modules/mapbox-gl/dist/mapbox-gl.css";
 
   let shopName = '';
-
   let map;
   let mapContainer;
   let searchResults = [];
 
   onMount(() => {
-  const initialState = { lng: 2.3139321838640297, lat: 41.649540287334204, zoom: 9 };
+  const initialState = { lng: 2.3139321838640297, lat: 41.649540287334204, zoom: 12 };
 
   map = new Map({
     container: mapContainer,
@@ -57,60 +55,65 @@
   });
 });
 
-  onDestroy(() => {
-    map.remove();
-  });
-
-  const storeSubmit = () => {
-    // Lógica de envío del formulario
-  };
-
   const handleSearchInput = async (inputValue) => {
-    const longitude = 2.3139321838640297; // Longitud de la ubicación preestablecida
-    const latitude = 41.649540287334204;  // Latitud de la ubicación preestablecida
-
-    const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${inputValue}.json?access_token=${import.meta.env.VITE_MAPBOX_KEY}&proximity=${longitude},${latitude}&bbox=${longitude - 0.1},${latitude - 0.1},${longitude + 0.1},${latitude + 0.1}`);
-
-    const data = await response.json();
-    searchResults = data.features;
-
-    // Comprueba si la fuente 'markers' está inicializada antes de actualizarla
-    if (map.getSource('markers')) {
-      // Limpiar los marcadores existentes en el mapa
+    if (!inputValue) {
+      // Limpiar resultados si la entrada está vacía
+      searchResults = [];
       map.getSource('markers').setData({
         type: 'FeatureCollection',
         features: []
       });
+      return;
+    }
 
-      // Agregar marcadores al mapa
-      const markerFeatures = searchResults.map(result => ({
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: result.center
-        },
-        properties: {
-          title: result.place_name
-        }
-      }));
+    try {
+      const longitude = 2.3139321838640297;
+      const latitude = 41.649540287334204;
 
-      map.getSource('markers').setData({
-        type: 'FeatureCollection',
-        features: markerFeatures
-      });
+      const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${inputValue}.json?access_token=${import.meta.env.VITE_MAPBOX_KEY}&proximity=${longitude},${latitude}&bbox=${longitude - 0.1},${latitude - 0.1},${longitude + 0.1},${latitude + 0.1}`);
+
+      if (!response.ok) {
+        throw new Error('Error en la solicitud de búsqueda');
+      }
+
+      const data = await response.json();
+      searchResults = data.features;
+
+      if (map.getSource('markers')) {
+        map.getSource('markers').setData({
+          type: 'FeatureCollection',
+          features: searchResults.map(result => ({
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: result.center
+            },
+            properties: {
+              title: result.place_name
+            }
+          }))
+        });
+      }
+    } catch (error) {
+      console.error('Error de búsqueda:', error);
+      // Manejar el error, por ejemplo, mostrar un mensaje al usuario
     }
   };
+
+  const selectedShop = () => {
+    navigate('/lists', { replace: true });
+  }
 </script>
 
 <div class="background-container">
-  <Form legend={'Editar botiga'} handleSubmit={storeSubmit}>
+  <Form legend={'Editar botiga'} handleSubmit={() => {}}>
     <Text lblName={'Introdueix el nom de la botiga'} placeholder={'Nom de la botiga'} bind:value={shopName} on:input={e => handleSearchInput(e.detail)} />
   </Form>
 
   <ul>
     <p>Ubicacions més properes</p>
     {#each searchResults as result (result.id)}
-      <li>{result.place_name}</li>
+      <li on:click={selectedShop}>{result.place_name}</li>
     {/each}
   </ul>
 

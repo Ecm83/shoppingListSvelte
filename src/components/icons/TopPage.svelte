@@ -1,4 +1,5 @@
 <script>
+  //@ts-nocheck
   let scrollButtonClicked = false;
 
   function scrollToTop() {
