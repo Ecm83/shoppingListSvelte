@@ -3,10 +3,10 @@
   // Recupera los datos del usuario del Local Storage
   let welcomeMessage = '';
 
-  user.subscribe((value) => {
-    if (user) {
+  user.subscribe((user) => {
+    if (user?.isLogedIn) {
     console.log('user en pagina edit', user);
-    welcomeMessage = `Hola ${value.name}`;
+    welcomeMessage = `Hola ${user.name}`;
   } else {
     welcomeMessage = 'Bienvenido a nuestra aplicación. Inicia sesión para obtener una experiencia personalizada.';
   }

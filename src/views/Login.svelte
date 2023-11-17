@@ -30,8 +30,8 @@
     console.log('Found User:', foundUser);
 
     if (foundUser) {
-      user.setUser(foundUser); // Establece el usuario actual
-      navigate('/lists', { replace: true });
+      user.setUser({isLogedIn: true, ...foundUser}); // Establece el usuario actual
+      navigate('/edit', { replace: true });
       
     } else {
       error = 'Credencials incorrectes'; // Muestra un mensaje de error si no se encuentra el usuario

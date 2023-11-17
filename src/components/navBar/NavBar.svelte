@@ -1,10 +1,21 @@
 <script>
+  //@ts-nocheck
   import './navBar.css';
   import { Link } from 'svelte-routing';
   import { user } from '../../stores/logedUser';
   import Logout from '../blueprints/buttons/Logout.svelte';
   import Hr from '../blueprints/others/Hr.svelte';
-  // import UserGreetings from '../blueprints/others/UserGreetings.svelte';
+  import UserGreetings from '../blueprints/others/UserGreetings.svelte';
+  console.log(user.isLogedIn);
+  
+  $: logged = false
+  
+  user.subscribe((user) => {
+    logged = user?.isLogedIn === undefined ? false : user?.isLogedIn
+  });
+
+  
+
 </script>
 
 <nav>
@@ -15,11 +26,11 @@
         location_searching
       </span>
     </h1>
-    <!-- <UserGreetings /> -->
+    <UserGreetings />
   </div>
 
   <div class="links-container">
-    {#if $user}
+    {#if logged}
       <div class="private-routes">
         <Link class="svelte-link" to="/edit">Editar</Link>
         <Link class="svelte-link" to='/lists'>Llistes</Link>

@@ -1,5 +1,8 @@
 <!-- PopUp.svelte -->
 <script>
+export let selectedProduct
+export let closePopup
+
   export let isOpen = false;
   export let onClose = () => {};
 
@@ -15,9 +18,11 @@
 
 {#if isOpen}
   <div class="popup-overlay">
+    <!-- Contenido del pop-up aquí -->
     <div class="popup-content">
+      <h2>{selectedProduct}</h2>
       <slot></slot>
-      <button on:click={close}>Cerrar</button>
+      <button on:click={closePopup}>Cerrar Popup</button>
     </div>
   </div>
 {/if}
@@ -28,8 +33,8 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100rem;
-    height: 100rem;
+    width: 100vw;
+    height: 100vh;
     background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
