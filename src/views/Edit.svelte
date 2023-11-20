@@ -7,8 +7,8 @@
   import TopPage from "../components/icons/TopPage.svelte";
   import { navigate } from 'svelte-routing';
   import 'mapbox-gl/dist/mapbox-gl.css';
-
-  import { Map } from "mapbox-gl";
+  
+  import { Map, Marker, Popup } from "mapbox-gl";
 
   let shopName = '';
   let map;
@@ -16,7 +16,8 @@
   let searchResults = [];
 
   onMount(() => {
-  const initialState = { lng: 2.3139321838640297, lat: 41.649540287334204, zoom: 12 };
+    const initialState = { lng: 2.3139321838640297, lat: 41.649540287334204, zoom: 12
+  };
 
   map = new Map({
     container: mapContainer,
@@ -25,6 +26,12 @@
     center: [initialState.lng, initialState.lat],
     zoom: initialState.zoom,
   });
+
+ 
+
+  // const locationMarker = new Marker({
+  //   color: "#F7AD19",
+  // }).setLngLat([initialState.lng, initialState.lat]).setPopup(popup).addTo(map)
 
   map.on('load', () => {
     // Asegúrate de tener una fuente llamada 'markers' en tu estilo de Mapbox GL
@@ -51,8 +58,24 @@
           'icon-size': .5
         }
       });
-    });
+    });    
   });
+  
+  
+  // searchResults.forEach(result => {
+  //   const coordinates = result.center;
+  //   const title = result.place_name;
+    
+  //   // const popup = new Popup({
+  //   //   offset: 25,
+  //   // }).setHTML(`<h3>Prueba</h3>`)
+    
+  //   new mapboxgl.Marker()
+  //           .setLngLat(coordinates)
+  //           .setPopup(new mapboxgl.Popup({ offset: 25 }) // Ajusta el desplazamiento del pop-up
+  //               .setHTML('<h3>' + title + '</h3>'))
+  //           .addTo(map);
+  //   });
 });
 
   const handleSearchInput = async (inputValue) => {
@@ -113,7 +136,7 @@
   <ul>
     <p>Ubicacions més properes</p>
     {#each searchResults as result (result.id)}
-      <li on:click={selectedShop}>{result.place_name}</li>
+      <button on:click={selectedShop}>{result.place_name}</button>
     {/each}
   </ul>
 

@@ -13,9 +13,6 @@
   user.subscribe((user) => {
     logged = user?.isLogedIn === undefined ? false : user?.isLogedIn
   });
-
-  
-
 </script>
 
 <nav>
@@ -23,8 +20,8 @@
     <h1 class="header">
       ShoppIn 
       <span class="material-symbols-outlined">
-        location_searching
-      </span>
+        my_location
+        </span>
     </h1>
     <UserGreetings />
   </div>
@@ -53,11 +50,23 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
   }
 
   .header {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    position: relative;
+  }
+
+  .header span {
+    position: absolute;
+    top: 50%;
+    right: -5rem; /* Alineado a la derecha del h1 */
+    transform: translate(0%, -50%) rotate(15deg); /* Rotar 15 grados */
+    z-index: -1; /* Poner el span detrás del h1 */
+    font-size: 10rem;
+    color:	#999da067;
   }
 
   .header-container {
@@ -68,6 +77,11 @@
     margin-bottom: 1rem;
   }
 
+  .links-container {
+    width: 100%;
+    max-width: 140rem;
+  }
+
   h1 {
     font-family: var(--primary-font);
     text-align: center;
@@ -76,17 +90,11 @@
     color: var(--primary-color);
   }
 
-  /* .links-container {
-    display: flex;
-    justify-content: center;
-  } */
-
   .private-routes,
   .public-routes {
     display: flex;
     justify-content: space-between;
-    /* align-items: center; */
-    gap: 40rem;
+    width: 100%;
   }
 
   .material-symbols-outlined {

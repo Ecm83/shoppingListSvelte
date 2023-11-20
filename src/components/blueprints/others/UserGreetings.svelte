@@ -7,8 +7,6 @@
     if (user?.isLogedIn) {
     console.log('user en pagina edit', user);
     welcomeMessage = `Hola ${user.name}`;
-  } else {
-    welcomeMessage = 'Bienvenido a nuestra aplicación. Inicia sesión para obtener una experiencia personalizada.';
   }
   });
 
