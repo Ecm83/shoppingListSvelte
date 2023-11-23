@@ -1,7 +1,8 @@
 <script>
-  export let amount
+  export let amount = 0;
 </script>
-<label>Cuantitat:
+
+<label>Cantidad:
   <input type="number" bind:value={amount} class="input">
 </label>
 
