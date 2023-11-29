@@ -2,7 +2,6 @@
 <script>
   import Close from "../buttons/Close.svelte";
 
-  export let selectedProduct;
   export let closePopup;
 
   export let isOpen = false;
@@ -22,23 +21,14 @@
   <div class="popup-overlay">
     <!-- Contenido del pop-up aquí -->
     <div class="popup-content">
-      <h2>{selectedProduct}</h2>
-      <slot></slot>
-      <Close closeHandler={closePopup}/>
+      <slot />
+      <Close closeHandler={closePopup} />
     </div>
   </div>
 {/if}
 
 <style>
   /* Estilos para el pop-up y el fondo overlay */
-  h2{
-    font-family: var(--primary-font);
-    text-align: center;
-    margin-bottom: 3rem;
-    padding: 1rem;
-    font-size: 2.5rem;
-    color: var(--primary-color);
-  }
 
   .popup-overlay {
     position: fixed;
@@ -53,6 +43,7 @@
   }
 
   .popup-content {
+    max-width: 50rem;
     background: white;
     padding: 1rem;
     border-radius: 0.5rem;

@@ -5,18 +5,22 @@
   import Form from "../components/blueprints/forms/Form.svelte";
   import ShoppingCart from "../components/backImg/ShoppingCart.svelte";
   import TopPage from "../components/icons/TopPage.svelte";
-  import { navigate } from 'svelte-routing';
-  import 'mapbox-gl/dist/mapbox-gl.css';
+  import { navigate } from "svelte-routing";
+  import "mapbox-gl/dist/mapbox-gl.css";
   import { Map, Marker } from "mapbox-gl";
-  import { shopName } from '../stores/shopStore';
+  import { shopName } from "../stores/shopStore";
 
   let map;
   let mapContainer;
   let searchResults = [];
-  let selectedShopName = ''
+  let selectedShopName = "";
 
   onMount(() => {
-    const initialState = { lng: 2.3139321838640297, lat: 41.649540287334204, zoom: 12 };
+    const initialState = {
+      lng: 2.3139321838640297,
+      lat: 41.649540287334204,
+      zoom: 12,
+    };
 
     map = new Map({
       container: mapContainer,
@@ -26,39 +30,42 @@
       zoom: initialState.zoom,
     });
 
-    map.on('load', () => {
-      map.addSource('markers', {
-        type: 'geojson',
+    map.on("load", () => {
+      map.addSource("markers", {
+        type: "geojson",
         data: {
-          type: 'FeatureCollection',
-          features: []
+          type: "FeatureCollection",
+          features: [],
+        },
+      });
+
+      map.loadImage(
+        "https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png",
+        (error, image) => {
+          if (error) throw error;
+
+          map.addImage("custom-marker", image);
+
+          map.addLayer({
+            id: "markers",
+            type: "symbol",
+            source: "markers",
+            layout: {
+              "icon-image": "custom-marker",
+              "icon-size": 0.5,
+            },
+          });
         }
-      });
-
-      map.loadImage('https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png', (error, image) => {
-        if (error) throw error;
-
-        map.addImage('custom-marker', image);
-
-        map.addLayer({
-          id: 'markers',
-          type: 'symbol',
-          source: 'markers',
-          layout: {
-            'icon-image': 'custom-marker',
-            'icon-size': 0.5
-          }
-        });
-      });
+      );
     });
   });
 
   const handleSearchInput = async (inputValue) => {
     if (!inputValue) {
       searchResults = [];
-      map.getSource('markers').setData({
-        type: 'FeatureCollection',
-        features: []
+      map.getSource("markers").setData({
+        type: "FeatureCollection",
+        features: [],
       });
       return;
     }
@@ -67,45 +74,56 @@
       const longitude = 2.3139321838640297;
       const latitude = 41.649540287334204;
 
-      const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${inputValue}.json?access_token=${import.meta.env.VITE_MAPBOX_KEY}&proximity=${longitude},${latitude}&bbox=${longitude - 0.1},${latitude - 0.1},${longitude + 0.1},${latitude + 0.1}`);
+      const response = await fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${inputValue}.json?access_token=${
+          import.meta.env.VITE_MAPBOX_KEY
+        }&proximity=${longitude},${latitude}&bbox=${longitude - 0.1},${
+          latitude - 0.1
+        },${longitude + 0.1},${latitude + 0.1}`
+      );
 
       if (!response.ok) {
-        throw new Error('Error en la solicitud de búsqueda');
+        throw new Error("Error en la solicitud de búsqueda");
       }
 
       const data = await response.json();
       searchResults = data.features;
 
-      if (map.getSource('markers')) {
-        map.getSource('markers').setData({
-          type: 'FeatureCollection',
-          features: searchResults.map(result => ({
-            type: 'Feature',
+      if (map.getSource("markers")) {
+        map.getSource("markers").setData({
+          type: "FeatureCollection",
+          features: searchResults.map((result) => ({
+            type: "Feature",
             geometry: {
-              type: 'Point',
-              coordinates: result.center
+              type: "Point",
+              coordinates: result.center,
             },
             properties: {
-              title: result.place_name
-            }
-          }))
+              title: result.place_name,
+            },
+          })),
         });
       }
     } catch (error) {
-      console.error('Error de búsqueda:', error);
+      console.error("Error de búsqueda:", error);
     }
   };
 
   const selectedShop = (result) => {
     shopName.set(result.place_name);
     console.log(result.place_name);
-    navigate('/lists', { replace: true });
-  }
+    navigate("/lists", { replace: true });
+  };
 </script>
 
 <div class="background-container">
-  <Form legend={'Editar botiga'} handleSubmit={() => {}}>
-    <Text lblName={'Introdueix el nom de la botiga'} placeholder={'Nom de la botiga'} bind:value={selectedShopName} on:input={e => handleSearchInput(e.detail)} />
+  <Form legend={"Editar botiga"} handleSubmit={() => {}}>
+    <Text
+      lblName={"Introdueix el nom de la botiga"}
+      placeholder={"Nom de la botiga"}
+      bind:value={selectedShopName}
+      on:input={(e) => handleSearchInput(e.detail)}
+    />
   </Form>
 
   <ul>
@@ -152,11 +170,11 @@
   }
 
   button {
-    border: .1rem solid var(--primary-color);
+    border: 0.1rem solid var(--primary-color);
     border-radius: 5rem;
     text-align: center;
     font-family: var(--primary-font);
-    padding: .5rem;
+    padding: 0.5rem;
     background-color: transparent;
   }
 

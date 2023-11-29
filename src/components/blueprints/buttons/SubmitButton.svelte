@@ -1,9 +1,8 @@
 <script>
   export let btnName;
-  
 </script>
 
-<button>{btnName}</button>
+<button on:click>{btnName}</button>
 
 <style scoped>
   button {

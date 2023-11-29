@@ -1,18 +1,21 @@
-<!-- App.svelte -->
 <script>
   //@ts-nocheck
-  import { onMount } from 'svelte';
+  import { onMount } from "svelte";
   import Form from "../components/blueprints/forms/Form.svelte";
   import Text from "../components/blueprints/inputs/Text.svelte";
   import PopUp from "../components/blueprints/others/PopUp.svelte";
-  import Number from '../components/blueprints/inputs/Number.svelte';
-  import { shopName } from '../stores/shopStore';
-  // import Scrapper from "../utils/scrapper/Scrapper.svelte"
+  import Number from "../components/blueprints/inputs/Number.svelte";
+  import { shopName } from "../stores/shopStore";
+  import SubmitButton from "../components/blueprints/buttons/SubmitButton.svelte";
+  import { fetchData } from "../lib/fetchData";
 
-  let value = '';
-  let amount = 0
-  let selectedProduct = '';
+  let value = "";
+  let amount = 0;
+  let selectedProduct = "";
   let isOpen = false;
+  let products = [];
+  let isImageExpanded = false;
+  let subtotal = 0;
 
   const openPopup = (product) => {
     selectedProduct = product;
@@ -25,242 +28,96 @@
   };
 
   const handleKeyDown = (product) => {
-      openPopup(product);
+    openPopup(product);
   };
 
-  // onMount(() => {
-  //   // Puedes abrir el popup automáticamente después de montar el componente
-  //   openPopup({value});
-  // });
+  const parsePrice = () => {
+    if (selectedProduct && selectedProduct.currentSku.listPrice) {
+      const numericString = selectedProduct.currentSku.listPrice.replace(
+        /\$|,/g,
+        ""
+      );
+      const parsedAmount = parseFloat(amount); // Convertir amount a número
+      const parsedPrice = parseFloat(numericString);
+      return parsedPrice * parsedAmount;
+    }
+    return 0;
+  };
+
+  const updateSubtotal = () => {
+    subtotal = parsePrice();
+  };
+
+  const handleAmountChange = (event) => {
+    amount = event.detail.value;
+    updateSubtotal();
+  };
 
   const addProductToShoppingList = () => {
-    console.log('Linked')
+    console.log("Linked");
+  };
+
+  async function handleFetch(value) {
+    products = await fetchData(value);
   }
 
-  // Construccion de productos para prueba de buen funcionamiento
-  const products = [
-    {
-      id: 1,
-      name: "Agua de la Fuente del olivo",
-      price: 0.99,
-      category: "Bebidas",
-    },
-    {
-      id: 2,
-      name: "Agua sabor a lentejas",
-      price: 1.25,
-      category: "Bebidas",
-    },
-    {
-      id: 3,
-      name: "Agua con gas",
-      price: 0.50,
-      category: "Bebidas",
-    },
-    {
-      id: 4,
-      name: "Coca-cola",
-      price: 0.30,
-      category: "Bebidas",
-    },
-    {
-      id: 5,
-      name: "Fanta limón",
-      price: 0.30,
-      category: "Bebidas",
-    },
-    {
-      id: 6,
-      name: "Fanta naranja",
-      price: 0.30,
-      category: "Bebidas",
-    },
-    {
-      id: 7,
-      name: "Papel de culo",
-      price: 2.50,
-      category: "Hijene",
-    },
-    {
-      id: 8,
-      name: "Pasta de dientes",
-      price: 1.79,
-      category: "Hijene",
-    },
-    {
-      id: 9,
-      name: "Toallitas húmedas",
-      price: 3.05,
-      category: "Hijene",
-    },
-    {
-      id: 10,
-      name: "Pasta de dientes",
-      price: 1.79,
-      category: "Hijene",
-    },
-    {
-      id: 11,
-      name: "Listerine sabor Ajoblanco",
-      price: 5.15,
-      category: "Hijene",
-    },
-    {
-      id: 12,
-      name: "Kleenex 1m x 1m",
-      price: 1.79,
-      category: "Hijene",
-    },
-    {
-      id: 13,
-      name: "Lejia perfumada",
-      price: 0.59,
-      category: "Limpieza",
-    },
-    {
-      id: 14,
-      name: "Amoníaco",
-      price: 1.20,
-      category: "Limpieza",
-    },
-    {
-      id: 15,
-      name: "Fairi de Villavajo",
-      price: 2.09,
-      category: "Limpieza",
-    },
-    {
-      id: 16,
-      name: "Fregasuelos",
-      price: 3.02,
-      category: "Limpieza",
-    },
-    {
-      id: 17,
-      name: "Bobina papel secante",
-      price: 1.15,
-      category: "Limpieza",
-    },
-    {
-      id: 18,
-      name: "Limpiacristales",
-      price: 1.85,
-      category: "Limpieza",
-    },
-    {
-      id: 19,
-      name: "Paño limpiamuebles",
-      price: 1.79,
-      category: "Limpieza",
-    },
-    {
-      id: 20,
-      name: "Leche de cabra",
-      price: 2.08,
-      category: "Lácteos",
-    },
-    {
-      id: 21,
-      name: "Leche de vaca",
-      price: 1.55,
-      category: "Lácteos",
-    },
-    {
-      id: 22,
-      name: "Leche de burra",
-      price: 4.85,
-      category: "Lácteos",
-    },
-    {
-      id: 23,
-      name: "Leche de búfala",
-      price: 1.99,
-      category: "Lácteos",
-    },
-    {
-      id: 24,
-      name: "Leche de oca",
-      price: 2.08,
-      category: "Lácteos",
-    },
-    {
-      id: 25,
-      name: "Leche de pulpo",
-      price: 2.08,
-      category: "Lácteos",
-    },
-    {
-      id: 26,
-      name: "Leche mezcla aves",
-      price: 3.55,
-      category: "Lácteos",
-    },
-    {
-      id: 27,
-      name: "Dorada",
-      price: 6.75,
-      category: "Alimentción",
-    },
-    {
-      id: 28,
-      name: "Lubina",
-      price: 6.99,
-      category: "Alimentción",
-    },
-    {
-      id: 29,
-      name: "Pulpo hermitaño",
-      price: 20.99,
-      category: "Alimentción",
-    },
-    {
-      id: 30,
-      name: "Wagyú anoréxico",
-      price: 117,
-      category: "Alimentción",
-    },
-    {
-      id: 31,
-      name: "Capón entero",
-      price: 50,
-      category: "Alimentción",
-    },
-    {
-      id: 22,
-      name: "Chuletas y medianas de cordero",
-      price: 6.75,
-      category: "Alimentción",
-    },
-  ]
+  const toggleImageSize = () => {
+    isImageExpanded = !isImageExpanded;
+  };
+
+  onMount(() => {
+    updateSubtotal(); // Actualiza el subtotal al inicio
+  });
 </script>
 
-
-
 <div class="container">
-  <Form legend={`Llista de la compra per ${$shopName}`}  handleSubmit={onload}>
-    <Text lblName={'Introduce el producto a comprar'} placeholder={'Nombre del producto'} bind:value={value}/>
+  <Form legend={`Llista de la compra per ${$shopName}`} handleSubmit={onload}>
+    <Text
+      lblName={"Introduce el producto a comprar"}
+      placeholder={"Nombre del producto"}
+      bind:value
+    />
+    <SubmitButton on:click={() => handleFetch(value)} btnName={"Cercar"} />
   </Form>
 
   <ul>
-    <button on:click={() => handleKeyDown('Producte XXXX Preu XXXX')} tabindex="0">
-      <span class="product-name">`Aqui se renderiza el valor devuelto del scrapping {value}`</span>
-      <span class="material-symbols-outlined">task_alt</span>
-    </button>
+    {#each products as product}
+      <button on:click={() => handleKeyDown(product)} tabindex="0">
+        <span class="product-name">{product.productName}</span>
+        <span class="material-symbols-outlined">task_alt</span>
+      </button>
+    {/each}
   </ul>
 
-  <PopUp bind:isOpen {closePopup} {selectedProduct}>  
-
-    <div class="img-description">  
-      <div class="img">Product Picture</div>
+  <PopUp bind:isOpen {closePopup}>
+    <h2>{selectedProduct.productName}</h2>
+    <div class="img-description">
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <!-- svelte-ignore a11y-no-static-element-interactions -->
+      <div class="img" on:click={toggleImageSize}>
+        <img
+          src={selectedProduct.image135}
+          alt={selectedProduct.imageAltText}
+          style={isImageExpanded
+            ? "width: 50rem; height: auto;"
+            : "width: 100%; height: 100%;"}
+        />
+      </div>
       <div class="description">
-        <p class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo nam quia itaque harum mollitia consequuntur iste libero eos pariatur est. Blanditiis fugit tempore ratione velit itaque magnam laudantium sequi accusamus?</p>
+        <p class="text">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Non harum, in
+          doloribus aperiam, consequatur laborum molestiae excepturi culpa
+          laboriosam dolores quaerat beatae iure repellendus totam nisi
+          cupiditate minus. Est, sit.
+        </p>
       </div>
     </div>
 
     <div class="product-options">
-    <p class="text">Categoría: XXXXXXX</p>
-      <Number bind:amount={amount}/>
-      <p>Here i render de sub total price</p>
+      <p class="text">Categoría: XXXXXXX</p>
+      <Number bind:amount on:change={handleAmountChange} />
+      <p>Preu: {selectedProduct.currentSku.listPrice}</p>
+      <p>Sub total: {subtotal}</p>
     </div>
     <button on:click={addProductToShoppingList}>Afegir producte</button>
   </PopUp>
@@ -294,9 +151,28 @@
   }
 
   .img {
-    border: .5rem solid var(--primary-color);
+    border: none;
     height: 20rem;
-    width: 20rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+      90deg,
+      #ff7f00,
+      #ffcc00,
+      #ff7f00
+    ); /* Tonos naranjas */
+    background-size: 200% 100%; /* Tamaño del gradiente (200% para que sea más largo) */
+    animation: neon 5s linear infinite; /* Duración de la animación de 5 segundos */
+  }
+
+  @keyframes neon {
+    0% {
+      background-position: 200% 0; /* Inicia completamente a la derecha */
+    }
+    100% {
+      background-position: -200% 0; /* Termina completamente a la izquierda */
+    }
   }
 
   .img-description {
@@ -304,7 +180,6 @@
     gap: 2rem;
     align-content: center;
     margin: 0 3rem;
-
   }
 
   .description {
@@ -332,8 +207,33 @@
     padding: 1rem;
     border-radius: 2rem;
     margin: 2.5rem 20rem 2rem 2.5rem;
-    border: .1rem solid var(--primary-color);
+    border: 0.1rem solid var(--primary-color);
     background-color: transparent;
     color: var(--primary-color);
+  }
+
+  h2 {
+    font-family: var(--primary-font);
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 1rem;
+    font-size: 2.5rem;
+    color: var(--primary-color);
+  }
+
+  img {
+    height: 19.5rem;
+    width: 19.5rem;
+    padding: 1rem;
+  }
+
+  p {
+    font-size: 2rem;
+    margin: 0.5rem;
+    font-family: var(--primary-font);
+  }
+
+  .product-name {
+    flex-grow: 1;
   }
 </style>
