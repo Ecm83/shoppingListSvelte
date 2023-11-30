@@ -8,13 +8,14 @@
   import { shopName } from "../stores/shopStore";
   import SubmitButton from "../components/blueprints/buttons/SubmitButton.svelte";
   import { fetchData } from "../lib/fetchData";
+  import Shop from "../components/backImg/Shop.svelte";
 
   let value = "";
   let amount = 0;
   let selectedProduct = "";
   let isOpen = false;
   let products = [];
-  let shoppingList = [];
+  $: shoppingList = JSON.parse(localStorage.getItem("shoppingList")) || [];
   let isImageExpanded = false;
   $: subtotal = 0;
 
@@ -66,11 +67,9 @@
     };
 
     shoppingList = [...shoppingList, product];
-    console.table(shoppingList);
-    const localShoppingList = localStorage.setItem(
-      "shoppingList",
-      JSON.stringify(shoppingList)
-    );
+    localStorage.setItem("shoppingList", JSON.stringify(shoppingList));
+    amount = 0;
+    closePopup();
   };
   // const handleKeyDown = (product) => {
 
@@ -85,7 +84,7 @@
   };
 
   onMount(() => {
-    updateSubtotal(); // Actualiza el subtotal al inicio
+    updateSubtotal();
   });
 </script>
 
@@ -107,7 +106,7 @@
     <div class="title-list list-shopname">
       <h2>{$shopName || "Sephora"}</h2>
       <ul class="list-flex">
-        {#each JSON.parse(localStorage.getItem("shoppingList")) as listItem}
+        {#each shoppingList as listItem}
           <li class="product-flex">
             <input type="checkbox" />
             {listItem.productName} - {listItem.brandName} - {listItem.amount} - {listItem.subtotal}
@@ -170,6 +169,15 @@
   </div>
   <button on:click={addProductToShoppingList}>Afegir producte</button>
 </PopUp>
+
+<!-- const listDone = {
+  shop: {
+    adress: 'XXXX',
+    shopName: $shopName,
+  },
+  products: shoppingList
+
+  } -->
 
 <!-- <Scrapper /> -->
 
