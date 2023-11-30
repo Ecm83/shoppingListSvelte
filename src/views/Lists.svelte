@@ -14,8 +14,9 @@
   let selectedProduct = "";
   let isOpen = false;
   let products = [];
+  let shoppingList = [];
   let isImageExpanded = false;
-  let subtotal = 0;
+  $: subtotal = 0;
 
   const openPopup = (product) => {
     selectedProduct = product;
@@ -54,8 +55,26 @@
   };
 
   const addProductToShoppingList = () => {
-    console.log("Linked");
+    const product = {
+      id: selectedProduct.currentSku.skuId,
+      productName: selectedProduct.productName,
+      brandName: selectedProduct.brandName,
+      img: selectedProduct.image135,
+      imgAltText: selectedProduct.currentSku.imageAltText,
+      amount,
+      subtotal,
+    };
+
+    shoppingList = [...shoppingList, product];
+    console.table(shoppingList);
+    const localShoppingList = localStorage.setItem(
+      "shoppingList",
+      JSON.stringify(shoppingList)
+    );
   };
+  // const handleKeyDown = (product) => {
+
+  // };
 
   async function handleFetch(value) {
     products = await fetchData(value);
@@ -71,57 +90,86 @@
 </script>
 
 <div class="container">
-  <Form legend={`Llista de la compra per ${$shopName}`} handleSubmit={onload}>
+  <Form
+    legend={`Llista de la compra per ${$shopName || "Sephora"}`}
+    handleSubmit={onload}
+  >
     <Text
-      lblName={"Introduce el producto a comprar"}
-      placeholder={"Nombre del producto"}
+      lblName={"Introdueix el producte a comprar"}
+      placeholder={"Nom del producte"}
       bind:value
     />
     <SubmitButton on:click={() => handleFetch(value)} btnName={"Cercar"} />
   </Form>
 
-  <ul>
-    {#each products as product}
-      <button on:click={() => handleKeyDown(product)} tabindex="0">
-        <span class="product-name">{product.productName}</span>
-        <span class="material-symbols-outlined">task_alt</span>
-      </button>
-    {/each}
-  </ul>
-
-  <PopUp bind:isOpen {closePopup}>
-    <h2>{selectedProduct.productName}</h2>
-    <div class="img-description">
-      <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <!-- svelte-ignore a11y-no-static-element-interactions -->
-      <div class="img" on:click={toggleImageSize}>
-        <img
-          src={selectedProduct.image135}
-          alt={selectedProduct.imageAltText}
-          style={isImageExpanded
-            ? "width: 50rem; height: auto;"
-            : "width: 100%; height: 100%;"}
-        />
-      </div>
-      <div class="description">
-        <p class="text">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Non harum, in
-          doloribus aperiam, consequatur laborum molestiae excepturi culpa
-          laboriosam dolores quaerat beatae iure repellendus totam nisi
-          cupiditate minus. Est, sit.
-        </p>
-      </div>
+  <!-- Div contains ShoppingList and products finded -->
+  <div class="list-answer">
+    <div class="title-list list-shopname">
+      <h2>{$shopName || "Sephora"}</h2>
+      <ul class="list-flex">
+        {#each JSON.parse(localStorage.getItem("shoppingList")) as listItem}
+          <li class="product-flex">
+            <input type="checkbox" />
+            {listItem.productName} - {listItem.brandName} - {listItem.amount} - {listItem.subtotal}
+            <button>x</button>
+          </li>
+        {/each}
+      </ul>
     </div>
 
-    <div class="product-options">
-      <p class="text">Categoría: XXXXXXX</p>
-      <Number bind:amount on:change={handleAmountChange} />
-      <p>Preu: {selectedProduct.currentSku.listPrice}</p>
-      <p>Sub total: {subtotal}</p>
-    </div>
-    <button on:click={addProductToShoppingList}>Afegir producte</button>
-  </PopUp>
+    <ul>
+      {#each products as product}
+        <button
+          class="selection-card"
+          on:click={() => handleKeyDown(product)}
+          tabindex="0"
+        >
+          <span class="product-title product-name">{product.productName}</span>
+          <div style="width: 100%;"><hr /></div>
+          <span class="product-name">{product.brandName}</span>
+          <img
+            class="miniature"
+            alt={"Product miniature"}
+            src={product.image135}
+          />
+        </button>
+      {/each}
+    </ul>
+  </div>
 </div>
+
+<PopUp bind:isOpen {closePopup}>
+  <h2>{selectedProduct.productName}</h2>
+  <div class="img-description">
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div class="img" on:click={toggleImageSize}>
+      <img
+        src={selectedProduct.image135}
+        alt={selectedProduct.imageAltText}
+        style={isImageExpanded
+          ? "width: 50rem; height: auto;"
+          : "width: 100%; height: 100%;"}
+      />
+    </div>
+    <div class="description">
+      <p class="text">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Non harum, in
+        doloribus aperiam, consequatur laborum molestiae excepturi culpa
+        laboriosam dolores quaerat beatae iure repellendus totam nisi cupiditate
+        minus. Est, sit.
+      </p>
+    </div>
+  </div>
+
+  <div class="product-options">
+    <p class="text">Categoría: XXXXXXX</p>
+    <Number bind:value={amount} on:change={handleAmountChange} />
+    <p>Preu: {selectedProduct.currentSku.listPrice}</p>
+    <p>Sub total: ${subtotal}</p>
+  </div>
+  <button on:click={addProductToShoppingList}>Afegir producte</button>
+</PopUp>
 
 <!-- <Scrapper /> -->
 
@@ -140,10 +188,20 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    text-align: center;
-    font-size: 1.5rem;
-    line-height: 2.5rem;
-    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .selection-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 
   .product-name {
@@ -156,22 +214,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(
-      90deg,
-      #ff7f00,
-      #ffcc00,
-      #ff7f00
-    ); /* Tonos naranjas */
-    background-size: 200% 100%; /* Tamaño del gradiente (200% para que sea más largo) */
-    animation: neon 5s linear infinite; /* Duración de la animación de 5 segundos */
+    background: linear-gradient(90deg, #ff7f00, #ffcc00, #ff7f00);
+    background-size: 200% 100%;
+    animation: neon 5s linear infinite;
   }
 
   @keyframes neon {
     0% {
-      background-position: 200% 0; /* Inicia completamente a la derecha */
+      background-position: 200% 0;
     }
     100% {
-      background-position: -200% 0; /* Termina completamente a la izquierda */
+      background-position: -200% 0;
     }
   }
 
@@ -235,5 +288,40 @@
 
   .product-name {
     flex-grow: 1;
+  }
+
+  .miniature {
+    width: 10rem;
+    height: 10rem;
+  }
+
+  .product-title {
+    margin-top: 2rem;
+  }
+
+  .list-answer {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .list-shopname {
+    display: flex;
+    flex-direction: row;
+    border: 0.1rem solid var(--primary-color);
+  }
+
+  .list-flex {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-flex {
+    display: flex;
+    align-items: center;
+  }
+
+  .title-list {
+    display: flex;
+    flex-direction: column;
   }
 </style>
