@@ -64,6 +64,7 @@
       imgAltText: selectedProduct.currentSku.imageAltText,
       amount,
       subtotal,
+      checked: false,
     };
 
     shoppingList = [...shoppingList, product];
@@ -86,6 +87,15 @@
   onMount(() => {
     updateSubtotal();
   });
+
+  const removeProduct = (product) => {
+    shoppingList = shoppingList.filter((item) => item !== product);
+    localStorage.setItem("shoppingList", JSON.stringify(shoppingList));
+  };
+
+  const toggleChecked = (product) => {
+    product.checked = !product.checked;
+  };
 </script>
 
 <div class="container">
@@ -108,9 +118,18 @@
       <ul class="list-flex">
         {#each shoppingList as listItem}
           <li class="product-flex">
-            <input type="checkbox" />
-            {listItem.productName} - {listItem.brandName} - {listItem.amount} - {listItem.subtotal}
-            <button>x</button>
+            <p class="item-in-list">
+              <input
+                type="checkbox"
+                bind:checked={listItem.checked}
+                on:change={() => toggleChecked(listItem)}
+              />
+              <span class:selected={listItem.checked}>
+                {listItem.productName} - {listItem.brandName} - {listItem.amount}
+                - {listItem.subtotal}
+              </span>
+              <button on:click={() => removeProduct(listItem)}>x</button>
+            </p>
           </li>
         {/each}
       </ul>
@@ -179,7 +198,7 @@
 
   } -->
 
-<!-- <Scrapper /> -->
+<!-- <Scrapper /> -->-
 
 <style scoped>
   .container {
@@ -331,5 +350,13 @@
   .title-list {
     display: flex;
     flex-direction: column;
+  }
+
+  .item-in-list {
+    font-size: 1.2rem;
+  }
+
+  .item-in-list input:checked + span {
+    text-decoration: line-through;
   }
 </style>
