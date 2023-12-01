@@ -18,6 +18,7 @@
   $: shoppingList = JSON.parse(localStorage.getItem("shoppingList")) || [];
   let isImageExpanded = false;
   $: subtotal = 0;
+  const getCheckboxClass = (isChecked) => (isChecked ? "checked" : "");
 
   const openPopup = (product) => {
     selectedProduct = product;
@@ -64,7 +65,7 @@
       imgAltText: selectedProduct.currentSku.imageAltText,
       amount,
       subtotal,
-      checked: false,
+      isChecked: false,
     };
 
     shoppingList = [...shoppingList, product];
@@ -72,9 +73,6 @@
     amount = 0;
     closePopup();
   };
-  // const handleKeyDown = (product) => {
-
-  // };
 
   async function handleFetch(value) {
     products = await fetchData(value);
@@ -94,7 +92,7 @@
   };
 
   const toggleChecked = (product) => {
-    product.checked = !product.checked;
+    product.isChecked = !product.isChecked;
   };
 </script>
 
@@ -111,30 +109,7 @@
     <SubmitButton on:click={() => handleFetch(value)} btnName={"Cercar"} />
   </Form>
 
-  <!-- Div contains ShoppingList and products finded -->
-  <div class="list-answer">
-    <div class="title-list list-shopname">
-      <h2>{$shopName || "Sephora"}</h2>
-      <ul class="list-flex">
-        {#each shoppingList as listItem}
-          <li class="product-flex">
-            <p class="item-in-list">
-              <input
-                type="checkbox"
-                bind:checked={listItem.checked}
-                on:change={() => toggleChecked(listItem)}
-              />
-              <span class:selected={listItem.checked}>
-                {listItem.productName} - {listItem.brandName} - {listItem.amount}
-                - {listItem.subtotal}
-              </span>
-              <button on:click={() => removeProduct(listItem)}>x</button>
-            </p>
-          </li>
-        {/each}
-      </ul>
-    </div>
-
+  <div class="products-list">
     <ul>
       {#each products as product}
         <button
@@ -153,6 +128,52 @@
         </button>
       {/each}
     </ul>
+
+    <div class="list-answer">
+      <div class="title-list list-shopname">
+        <h2>{$shopName || "Sephora"}</h2>
+        <ul class="list-flex">
+          {#each shoppingList as listItem}
+            <li class="product-flex">
+              <p class="item-in-list">
+                <input
+                  type="checkbox"
+                  class={getCheckboxClass(listItem.isChecked)}
+                />
+                <span class:selected={listItem.isChecked}>
+                  <div class="product-info">
+                    <div class="product-text">
+                      <span>{listItem.productName} | {listItem.brandName}</span>
+                      <hr />
+                      <div class="amount-price">
+                        <span class="text-in-list">Cuantitat:</span>
+                        {listItem.amount}
+                        <span class="text-in-list"> Preu: </span>
+                        ${listItem.subtotal}
+                      </div>
+                    </div>
+                    <div class="miniature-button"></div>
+                  </div>
+                </span>
+                <img
+                  class="miniature"
+                  src={listItem.img}
+                  alt={listItem.imgAltText}
+                />
+                <button
+                  class="item-delete-button"
+                  on:click={() => removeProduct(listItem)}>x</button
+                >
+              </p>
+            </li>
+          {/each}
+        </ul>
+        <div class="list-buttons">
+          <button>Gurdar llista</button>
+          <button class="list-delete-button">Eliminar llista</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -189,23 +210,16 @@
   <button on:click={addProductToShoppingList}>Afegir producte</button>
 </PopUp>
 
-<!-- const listDone = {
-  shop: {
-    adress: 'XXXX',
-    shopName: $shopName,
-  },
-  products: shoppingList
-
-  } -->
-
-<!-- <Scrapper /> -->-
-
 <style scoped>
+  .products-list {
+    display: flex;
+    gap: 5rem;
+  }
   .container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 60%;
+    width: 100%;
     max-width: 66rem;
     margin: auto;
     gap: 3rem;
@@ -216,7 +230,7 @@
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(3, 1fr);
     gap: 0.5rem;
   }
@@ -318,8 +332,10 @@
   }
 
   .miniature {
-    width: 10rem;
-    height: 10rem;
+    width: 5rem;
+    height: 5rem;
+    margin: 0;
+    padding: 0;
   }
 
   .product-title {
@@ -338,25 +354,86 @@
   }
 
   .list-flex {
+    align-items: center;
     display: flex;
     flex-direction: column;
-  }
-
-  .product-flex {
-    display: flex;
-    align-items: center;
+    gap: 3rem;
   }
 
   .title-list {
     display: flex;
     flex-direction: column;
+    width: 65rem;
   }
 
   .item-in-list {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    gap: 2rem;
+    justify-content: space-around;
   }
 
   .item-in-list input:checked + span {
     text-decoration: line-through;
+  }
+
+  .list-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .list-buttons button {
+    margin: 0;
+    width: 90%;
+  }
+
+  input[type="checkbox"] {
+    width: 3rem;
+    height: 3rem;
+    border: 0.1rem solid var(--primary-color);
+  }
+
+  /* Estilo adicional cuando está marcado */
+  input[type="checkbox"] {
+    background-color: var(--primary-color); /* Cambia aquí al color deseado */
+  }
+
+  .item-delete-button {
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    border: 1px solid var(--primary-color);
+    margin: 0;
+  }
+
+  .text-in-list {
+    color: var(--primary-color);
+    font-weight: 500;
+    margin: 0 1rem;
+  }
+
+  .amount-price {
+    display: flex;
+    justify-content: end;
+  }
+
+  .miniature-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5rem;
+  }
+
+  .product-text {
+    width: 40rem;
   }
 </style>
