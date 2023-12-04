@@ -8,7 +8,6 @@
   import { shopName } from "../stores/shopStore";
   import SubmitButton from "../components/blueprints/buttons/SubmitButton.svelte";
   import { fetchData } from "../lib/fetchData";
-  import Shop from "../components/backImg/Shop.svelte";
 
   let value = "";
   let amount = 0;
@@ -17,7 +16,9 @@
   let products = [];
   $: shoppingList = JSON.parse(localStorage.getItem("shoppingList")) || [];
   let isImageExpanded = false;
-  $: subtotal = 0;
+  let subtotal = 0;
+  let total = 0;
+
   const getCheckboxClass = (isChecked) => (isChecked ? "checked" : "");
 
   const openPopup = (product) => {
@@ -56,6 +57,17 @@
     updateSubtotal();
   };
 
+  const calculateTotal = () => {
+    return shoppingList
+      .reduce((acc, product) => acc + parseFloat(product.subtotal), 0)
+      .toFixed(2);
+  };
+
+  onMount(() => {
+    updateSubtotal();
+    total = calculateTotal(); // Actualizar total al inicio
+  });
+
   const addProductToShoppingList = () => {
     const product = {
       id: selectedProduct.currentSku.skuId,
@@ -72,6 +84,7 @@
     localStorage.setItem("shoppingList", JSON.stringify(shoppingList));
     amount = 0;
     closePopup();
+    total = calculateTotal(); // Actualizar total después de añadir producto
   };
 
   async function handleFetch(value) {
@@ -82,13 +95,10 @@
     isImageExpanded = !isImageExpanded;
   };
 
-  onMount(() => {
-    updateSubtotal();
-  });
-
   const removeProduct = (product) => {
     shoppingList = shoppingList.filter((item) => item !== product);
     localStorage.setItem("shoppingList", JSON.stringify(shoppingList));
+    total = calculateTotal(); // Actualizar total después de eliminar producto
   };
 
   const toggleChecked = (product) => {
@@ -168,6 +178,7 @@
             </li>
           {/each}
         </ul>
+        <p class="p-total">Total: <span class="total-list">${total}</span></p>
         <div class="list-buttons">
           <button>Gurdar llista</button>
           <button class="list-delete-button">Eliminar llista</button>
@@ -435,5 +446,19 @@
 
   .product-text {
     width: 40rem;
+  }
+
+  .p-total {
+    text-align: end;
+    margin: 5rem 5rem 1rem 3rem;
+    display: inline-block;
+    border-top: 0.1rem solid var(--primary-color);
+    border-bottom: 0.1rem solid var(--primary-color);
+    padding: 2rem;
+  }
+
+  .total-list {
+    color: var(--primary-color);
+    font-weight: 700;
   }
 </style>
