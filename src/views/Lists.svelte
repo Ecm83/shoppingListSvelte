@@ -99,6 +99,17 @@
     isListEmpty = false; // Cambiar a false ya que ahora la lista tiene al menos un producto
   };
 
+  const saveShoppingList = () => {
+    const savedLists = JSON.parse(localStorage.getItem("savedLists")) || [];
+    const newList = {
+      shopName: $shopName || "Sephora",
+      products: [...shoppingList],
+    };
+    savedLists.push(newList);
+    localStorage.setItem("savedLists", JSON.stringify(savedLists));
+    // Puedes añadir lógica adicional aquí, como mostrar un mensaje de éxito.
+  };
+
   async function handleFetch(value) {
     products = await fetchData(value);
   }
@@ -200,7 +211,7 @@
         </ul>
         <p class="p-total">Total: <span class="total-list">${total}</span></p>
         <div class="list-buttons">
-          <button>Gurdar llista</button>
+          <button on:click={saveShoppingList}>Gurdar llista</button>
           <button class="list-delete-button" on:click={clearShoppingList}
             >Eliminar llista</button
           >
