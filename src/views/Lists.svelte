@@ -1,5 +1,14 @@
 <script>
   //@ts-nocheck
+  /**
+   * TODO: Añadir funcionalidad al boton de gurardar llista
+   * TODO: Añadir funcionalidad al botón de eliminar llista
+   * TODO: Añadir comentarios al código
+   * TODO: Refactorizar la pagina
+   * TODO: Añadir la funcionalidad topPage
+   * ! Corregir el error del refresh
+
+   */
   import { onMount } from "svelte";
   import Form from "../components/blueprints/forms/Form.svelte";
   import Text from "../components/blueprints/inputs/Text.svelte";
@@ -105,6 +114,11 @@
     product.isChecked = !product.isChecked;
   };
 </script>
+
+/** *TODO: Agregar funcionalidad al botón de guardar lista *TODO: */ /** //TODO:
+Agregar una funcion para que no muestre la lista si no hay una creada //TODO:
+Añadir funcionaliidad al botón de añadir producto //TODO: Añadir funcionalidad
+al botón de eliminar producto //TODO: Estilar la lista de productos */
 
 <div class="container">
   <Form
