@@ -19,7 +19,7 @@
   import { fetchData } from "../lib/fetchData";
 
   let value = "";
-  let amount = 0;
+  let amount = 1;
   let selectedProduct = "";
   let isOpen = false;
   let products = [];
@@ -27,6 +27,7 @@
   let isImageExpanded = false;
   let subtotal = 0;
   let total = 0;
+  let isListEmpty = true; // Variable para controlar la visibilidad de la lista
 
   const getCheckboxClass = (isChecked) => (isChecked ? "checked" : "");
 
@@ -75,6 +76,7 @@
   onMount(() => {
     updateSubtotal();
     total = calculateTotal(); // Actualizar total al inicio
+    isListEmpty = shoppingList.length === 0; // Verificar si la lista está vacía
   });
 
   const addProductToShoppingList = () => {
@@ -94,6 +96,7 @@
     amount = 0;
     closePopup();
     total = calculateTotal(); // Actualizar total después de añadir producto
+    isListEmpty = false; // Cambiar a false ya que ahora la lista tiene al menos un producto
   };
 
   async function handleFetch(value) {
@@ -108,10 +111,18 @@
     shoppingList = shoppingList.filter((item) => item !== product);
     localStorage.setItem("shoppingList", JSON.stringify(shoppingList));
     total = calculateTotal(); // Actualizar total después de eliminar producto
+    isListEmpty = shoppingList.length === 0; // Verificar si la lista está vacía después de la eliminación
   };
 
   const toggleChecked = (product) => {
     product.isChecked = !product.isChecked;
+  };
+
+  const clearShoppingList = () => {
+    shoppingList = [];
+    localStorage.removeItem("shoppingList");
+    total = 0;
+    isListEmpty = true; // Cambiar a true ya que la lista está vacía ahora
   };
 </script>
 
@@ -190,7 +201,9 @@
         <p class="p-total">Total: <span class="total-list">${total}</span></p>
         <div class="list-buttons">
           <button>Gurdar llista</button>
-          <button class="list-delete-button">Eliminar llista</button>
+          <button class="list-delete-button" on:click={clearShoppingList}
+            >Eliminar llista</button
+          >
         </div>
       </div>
     </div>
@@ -372,9 +385,12 @@
   }
 
   .list-shopname {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: row;
-    border: 0.1rem solid var(--primary-color);
+    border: 0.1rem solid rgba(0, 0, 0, 0.1);
+    border-radius: 1rem;
+    margin-right: 3rem;
   }
 
   .list-flex {
