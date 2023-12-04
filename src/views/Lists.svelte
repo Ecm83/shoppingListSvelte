@@ -5,11 +5,11 @@
    * TODO: Añadir funcionalidad al botón de eliminar llista
    * TODO: Añadir comentarios al código
    * TODO: Refactorizar la pagina
-   * TODO: Añadir la funcionalidad topPage
    * ! Corregir el error del refresh
-
    */
+
   import { onMount } from "svelte";
+  import TopPage from "./../components/icons/TopPage.svelte";
   import Form from "../components/blueprints/forms/Form.svelte";
   import Text from "../components/blueprints/inputs/Text.svelte";
   import PopUp from "../components/blueprints/others/PopUp.svelte";
@@ -114,11 +114,6 @@
     product.isChecked = !product.isChecked;
   };
 </script>
-
-/** *TODO: Agregar funcionalidad al botón de guardar lista *TODO: */ /** //TODO:
-Agregar una funcion para que no muestre la lista si no hay una creada //TODO:
-Añadir funcionaliidad al botón de añadir producto //TODO: Añadir funcionalidad
-al botón de eliminar producto //TODO: Estilar la lista de productos */
 
 <div class="container">
   <Form
@@ -234,6 +229,10 @@ al botón de eliminar producto //TODO: Estilar la lista de productos */
   </div>
   <button on:click={addProductToShoppingList}>Afegir producte</button>
 </PopUp>
+
+<div class="top-page">
+  <TopPage />
+</div>
 
 <style scoped>
   .products-list {
@@ -474,5 +473,11 @@ al botón de eliminar producto //TODO: Estilar la lista de productos */
   .total-list {
     color: var(--primary-color);
     font-weight: 700;
+  }
+
+  .top-page {
+    display: flex;
+    justify-content: center;
+    margin-top: 5rem;
   }
 </style>
