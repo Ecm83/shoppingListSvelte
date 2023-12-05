@@ -23,7 +23,7 @@
 
 <label>
   Cantidad:
-  <input type="number" bind:value on:input={handleChange} />
+  <input type="number" bind:value on:input={handleChange} min="1" />
   <p style="color: red;">{warning}</p>
 </label>
 

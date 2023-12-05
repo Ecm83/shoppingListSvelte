@@ -1,8 +1,6 @@
 <script>
   //@ts-nocheck
   /**
-   * TODO: Añadir funcionalidad al boton de gurardar llista
-   * TODO: Añadir funcionalidad al botón de eliminar llista
    * TODO: Añadir comentarios al código
    * TODO: Refactorizar la pagina
    * ! Corregir el error del refresh
@@ -17,30 +15,33 @@
   import { shopName } from "../stores/shopStore";
   import SubmitButton from "../components/blueprints/buttons/SubmitButton.svelte";
   import { fetchData } from "../lib/fetchData";
-  import { fade, fly, scale } from "svelte/transition";
-  import { bounceInOut } from "svelte/easing";
 
   let value = "";
   let amount = 1;
   let selectedProduct = "";
   let isOpen = false;
   let products = [];
-  $: shoppingList = JSON.parse(localStorage.getItem("shoppingList")) || [];
+  let shoppingList = JSON.parse(localStorage.getItem("shoppingList")) || [];
   let isImageExpanded = false;
   let subtotal = 0;
   let total = 0;
-  let isListEmpty = true; // Variable para controlar la visibilidad de la lista
+  let isListEmpty = true;
 
   const getCheckboxClass = (isChecked) => (isChecked ? "checked" : "");
 
   const openPopup = (product) => {
     selectedProduct = product;
     isOpen = true;
+    updateSubtotal();
   };
 
   const closePopup = () => {
     selectedProduct = null;
     isOpen = false;
+  };
+
+  const updateSubtotal = () => {
+    subtotal = parsePrice();
   };
 
   const handleKeyDown = (product) => {
@@ -53,15 +54,11 @@
         /\$|,/g,
         ""
       );
-      const parsedAmount = parseFloat(amount); // Convertir amount a número
+      const parsedAmount = parseFloat(amount);
       const parsedPrice = parseFloat(numericString);
       return parsedPrice * parsedAmount;
     }
     return 0;
-  };
-
-  const updateSubtotal = () => {
-    subtotal = parsePrice();
   };
 
   const handleAmountChange = (event) => {
@@ -77,7 +74,7 @@
 
   onMount(() => {
     updateSubtotal();
-    total = calculateTotal(); // Actualizar total al inicio
+    total = calculateTotal();
     isListEmpty = shoppingList.length === 0;
     document
       .querySelector("input[type=checkbox]")
@@ -86,7 +83,7 @@
           ("checked");
         } else {
         }
-      }); // Verificar si la lista está vacía
+      });
   });
 
   const addProductToShoppingList = () => {
@@ -105,8 +102,9 @@
     localStorage.setItem("shoppingList", JSON.stringify(shoppingList));
     amount = 0;
     closePopup();
-    total = calculateTotal(); // Actualizar total después de añadir producto
-    isListEmpty = false; // Cambiar a false ya que ahora la lista tiene al menos un producto
+    total = calculateTotal();
+    isListEmpty = false;
+    updateSubtotal();
   };
 
   const saveShoppingList = () => {
@@ -117,7 +115,6 @@
     };
     savedLists.push(newList);
     localStorage.setItem("savedLists", JSON.stringify(savedLists));
-    // Puedes añadir lógica adicional aquí, como mostrar un mensaje de éxito.
   };
 
   async function handleFetch(value) {
@@ -131,8 +128,9 @@
   const removeProduct = (product) => {
     shoppingList = shoppingList.filter((item) => item !== product);
     localStorage.setItem("shoppingList", JSON.stringify(shoppingList));
-    total = calculateTotal(); // Actualizar total después de eliminar producto
-    isListEmpty = shoppingList.length === 0; // Verificar si la lista está vacía después de la eliminación
+    total = calculateTotal();
+    isListEmpty = shoppingList.length === 0;
+    updateSubtotal();
   };
 
   const toggleChecked = (product) => {
@@ -143,7 +141,8 @@
     shoppingList = [];
     localStorage.removeItem("shoppingList");
     total = 0;
-    isListEmpty = true; // Cambiar a true ya que la lista está vacía ahora
+    isListEmpty = true;
+    updateSubtotal();
   };
 </script>
 
@@ -227,7 +226,9 @@
         </ul>
         <p class="p-total">Total: <span class="total-list">${total}</span></p>
         <div class="list-buttons">
-          <button on:click={saveShoppingList}>Gurdar llista</button>
+          <button on:click={saveShoppingList} class="list-save-button"
+            >Guardar llista</button
+          >
           <button class="list-delete-button" on:click={clearShoppingList}
             >Eliminar llista</button
           >
@@ -263,7 +264,7 @@
 
   <div class="product-options">
     <p class="text">Categoría: XXXXXXX</p>
-    <Number bind:value={amount} on:change={handleAmountChange} />
+    <Number bind:value={amount} on:change={handleAmountChange} min />
     <p>Preu: {selectedProduct.currentSku.listPrice}</p>
     <p>Sub total: ${subtotal}</p>
   </div>
@@ -322,6 +323,7 @@
     background: linear-gradient(90deg, #ff7f00, #ffcc00, #ff7f00);
     background-size: 200% 100%;
     animation: neon 5s linear infinite;
+    border-radius: 1rem;
   }
 
   @keyframes neon {
@@ -526,5 +528,36 @@
     display: flex;
     justify-content: center;
     margin-top: 5rem;
+  }
+
+  .list-delete-button {
+    transition:
+      transform 300ms ease,
+      background-color 300ms ease;
+    background-color: var(--primary-color);
+    color: var(--white);
+  }
+
+  .list-save-button {
+    transition:
+      transform 300ms ease,
+      background-color 300ms ease;
+  }
+
+  .list-save-button:hover,
+  .list-delete-button:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+    border: none;
+  }
+
+  .list-save-button:hover {
+    background-color: var(--secondary-color);
+    color: var(--white);
+  }
+
+  .list-delete-button:hover {
+    background-color: var(--error);
+    color: var(--white);
   }
 </style>
