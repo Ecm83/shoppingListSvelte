@@ -87,18 +87,30 @@
   });
 
   const addProductToShoppingList = () => {
-    const product = {
-      id: selectedProduct.currentSku.skuId,
-      productName: selectedProduct.productName,
-      brandName: selectedProduct.brandName,
-      img: selectedProduct.image135,
-      imgAltText: selectedProduct.currentSku.imageAltText,
-      amount,
-      subtotal,
-      isChecked: false,
-    };
+    const existingProductIndex = shoppingList.findIndex(
+      (item) => item.id === selectedProduct.currentSku.skuId
+    );
 
-    shoppingList = [...shoppingList, product];
+    if (existingProductIndex !== -1) {
+      // Si el producto ya está en la lista, actualiza la cantidad y el subtotal
+      shoppingList[existingProductIndex].amount += parseFloat(amount);
+      shoppingList[existingProductIndex].subtotal += parsePrice();
+    } else {
+      // Si el producto no está en la lista, agrégalo
+      const product = {
+        id: selectedProduct.currentSku.skuId,
+        productName: selectedProduct.productName,
+        brandName: selectedProduct.brandName,
+        img: selectedProduct.image135,
+        imgAltText: selectedProduct.currentSku.imageAltText,
+        amount,
+        subtotal,
+        isChecked: false,
+      };
+
+      shoppingList = [...shoppingList, product];
+    }
+
     localStorage.setItem("shoppingList", JSON.stringify(shoppingList));
     amount = 0;
     closePopup();
