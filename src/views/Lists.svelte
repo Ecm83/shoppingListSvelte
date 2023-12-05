@@ -17,6 +17,8 @@
   import { shopName } from "../stores/shopStore";
   import SubmitButton from "../components/blueprints/buttons/SubmitButton.svelte";
   import { fetchData } from "../lib/fetchData";
+  import { fade, fly, scale } from "svelte/transition";
+  import { bounceInOut } from "svelte/easing";
 
   let value = "";
   let amount = 1;
@@ -76,7 +78,15 @@
   onMount(() => {
     updateSubtotal();
     total = calculateTotal(); // Actualizar total al inicio
-    isListEmpty = shoppingList.length === 0; // Verificar si la lista está vacía
+    isListEmpty = shoppingList.length === 0;
+    document
+      .querySelector("input[type=checkbox]")
+      .addEventListener("change", function () {
+        if (this.checked) {
+          ("checked");
+        } else {
+        }
+      }); // Verificar si la lista está vacía
   });
 
   const addProductToShoppingList = () => {
@@ -177,25 +187,31 @@
           {#each shoppingList as listItem}
             <li class="product-flex">
               <p class="item-in-list">
-                <input
-                  type="checkbox"
-                  class={getCheckboxClass(listItem.isChecked)}
-                />
-                <span class:selected={listItem.isChecked}>
-                  <div class="product-info">
-                    <div class="product-text">
-                      <span>{listItem.productName} | {listItem.brandName}</span>
-                      <hr />
-                      <div class="amount-price">
-                        <span class="text-in-list">Cuantitat:</span>
-                        {listItem.amount}
-                        <span class="text-in-list"> Preu: </span>
-                        ${listItem.subtotal}
+                <label>
+                  <div class="checkbox-custom"></div>
+                  <input
+                    type="checkbox"
+                    class={getCheckboxClass(listItem.isChecked)}
+                  />
+                  <span class:selected={listItem.isChecked}>
+                    <div class="product-info">
+                      <div class="product-text">
+                        <span
+                          >{listItem.productName} | {listItem.brandName}</span
+                        >
+                        <hr />
+                        <div class="amount-price">
+                          <span class="text-in-list">Cuantitat:</span>
+                          {listItem.amount}
+                          <span class="text-in-list"> Preu: </span>
+                          ${listItem.subtotal}
+                        </div>
                       </div>
+                      <div class="miniature-button"></div>
                     </div>
-                    <div class="miniature-button"></div>
-                  </div>
-                </span>
+                  </span>
+                </label>
+
                 <img
                   class="miniature"
                   src={listItem.img}
@@ -444,15 +460,19 @@
     width: 90%;
   }
 
+  /* input[type="checkbox"]:checked + .checkbox-custom {
+    background-color: blue;
+  } */
+
   input[type="checkbox"] {
-    width: 3rem;
-    height: 3rem;
-    border: 0.1rem solid var(--primary-color);
+    display: none;
   }
 
-  /* Estilo adicional cuando está marcado */
-  input[type="checkbox"] {
-    background-color: var(--primary-color); /* Cambia aquí al color deseado */
+  .checkbox-custom {
+    width: 2rem;
+    height: 2rem;
+    display: inline-block;
+    border: 0.1rem solid black;
   }
 
   .item-delete-button {

@@ -1,6 +1,12 @@
 <!-- PopUp.svelte -->
 <script>
+  import Form from "../forms/Form.svelte";
+
+  // @ts-nocheck
+
   import Close from "../buttons/Close.svelte";
+  import { fly } from "svelte/transition";
+  import { bounceInOut, circInOut, sineInOut } from "svelte/easing";
 
   export let closePopup;
 
@@ -18,7 +24,15 @@
 </script>
 
 {#if isOpen}
-  <div class="popup-overlay">
+  <div
+    class="popup-overlay"
+    transition:fly={{
+      x: 200,
+      duration: 500,
+      delay: 500,
+      easing: sineInOut,
+    }}
+  >
     <!-- Contenido del pop-up aquí -->
     <div class="popup-content">
       <slot />
